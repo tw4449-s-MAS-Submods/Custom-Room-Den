@@ -26,9 +26,13 @@ You can alternatively download the all-in-one version attaced below the release,
 
 ## Alternate Downloads:
 -[Spaceroom v1](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V1)
+
 -[Spaceroom v2](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V2)
+
 -[Spaceroom v3](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V3)
+
 -[Den](https://github.com/Cdino11/Custom-Room-Den)
+
 -[kitchen](https://github.com/Cdino11/Custom-Room-Kitchen)
 
 ## Troubleshooting:
@@ -37,7 +41,7 @@ You can alternatively download the all-in-one version attaced below the release,
    step 2, making sure to put the "game" and "lib" folders directly into the main "Doki Doki Literature Club" 
    folder.
 -If the problem persists, there may another issue with your install of MAS. Contact me (preferably on Reddit 
-   @ https://www.reddit.com/user/tw4449 or Discord @ tw4449#3300) and I'll see if I can help.
+   [@tw4449](https://www.reddit.com/user/tw4449) or Discord @ tw4449#3300) and I'll see if I can help.
 
 
 ## Other info:
