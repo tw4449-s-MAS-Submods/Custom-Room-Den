@@ -7,7 +7,7 @@ This submod adds a cozy green-walled den where you can relax with Monika.
 
 ## Instructions:
 
-1. Go to the "Releases" tab on the right this webpage (or click [HERE](https://github.com/Cdino11/Custom-Room-Den/releases)), then click on the latest version of "Den.zip". It should begin automatically downloading.
+1. Go to the "Releases" tab on the right this webpage (or click [HERE](https://github.com/tw4449/Custom-Room-Den/releases)), then click on the latest version of "Den.zip". It should begin automatically downloading.
 2. Unzip and open the folder called 'Den' (it should be in your 'Downloads' folder).
 3. From the Den folder, copy the 'game' and 'lib' folders into the main 
    'Doki Doki Literature Club' folder (AKA, the folder where you see 'DDLC.exe').
@@ -20,13 +20,13 @@ And that's it! It's that simple.
 
 I have other rooms available! They can be found here:
 
--[Spaceroom v1](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V1)
+-[Spaceroom v1](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V1)
 
--[Spaceroom v2](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V2)
+-[Spaceroom v2](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V2)
 
--[Spaceroom v3](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V3)
+-[Spaceroom v3](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V3)
 
--[Kitchen](https://github.com/Cdino11/Custom-Room-Kitchen)
+-[Kitchen](https://github.com/tw4449/Custom-Room-Kitchen)
 
 ## Troubleshooting:
 
