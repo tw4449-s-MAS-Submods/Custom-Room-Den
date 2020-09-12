@@ -184,7 +184,8 @@ init 5 python:
             persistent.event_database,
             eventlabel="bg_room_installed",
             conditional="True",
-            action=EV_ACT_QUEUE
+            action=EV_ACT_QUEUE,
+            aff_range=(mas_aff.ENAMORED, None)
         )
     )
 
