@@ -28,6 +28,8 @@ I have other rooms available! They can be found here:
 
 -[Kitchen](https://github.com/tw4449/Custom-Room-Kitchen)
 
+Or if you want them all visit the [Location Selector Main Repository](https://github.com/tw4449/tw4449-Location-Selector-Main-Repository)
+
 ## Troubleshooting:
 
 -If the room doesn't show up or if you get an error, most likely the files weren't placed correctly. Repeat 
