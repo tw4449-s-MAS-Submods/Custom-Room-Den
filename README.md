@@ -25,7 +25,7 @@ I have other rooms available! They can be found here:
 
 -[Spaceroom v3](https://github.com/Cdino11/Custom-Room-Furnished-Spaceroom-V3)
 
--[kitchen](https://github.com/Cdino11/Custom-Room-Kitchen)
+-[Kitchen](https://github.com/Cdino11/Custom-Room-Kitchen)
 
 ## Troubleshooting:
 
