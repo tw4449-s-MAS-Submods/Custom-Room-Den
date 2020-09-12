@@ -48,6 +48,7 @@ You can alternatively download the all-in-one version attaced below the release,
 
 -At the moment, the extra rooms don't account for the Halloween or Christmas decor (birthday decor works fine, 
    though), but we're planning on fixing this in an update before Halloween.
+   
 -Luckily, the game will notify you when an update to the submod is available, thanks to submod plugin we 
    incorporated courtesy of [booplicate](https://github.com/Booplicate) (its main repository can be found [here](https://github.com/Booplicate/MAS-Submods-SubmodUpdaterPlugin)). 
    This plugin both notifies you of updates, and helps you download and install them.
