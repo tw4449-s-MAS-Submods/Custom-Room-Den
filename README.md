@@ -11,7 +11,7 @@ This submod adds a cozy green-walled den where you can relax with Monika.
 2. Unzip and open the folder called 'Den' (it should be in your 'Downloads' folder).
 3. From the Den folder, copy the 'game' and 'lib' folders into the main 
    'Doki Doki Literature Club' folder (AKA, the folder where you see 'DDLC.exe').
-4. Launch MAS, and the rooms should be available. Monika will explain how to use them after a minute or so.
+4. Launch MAS, and the room should be available. Monika will explain how to use them after a minute or so.
 
 And that's it! It's that simple.
 
