@@ -29,7 +29,7 @@ I have other rooms available! They can be found here:
 
 ## Troubleshooting:
 
--If the rooms don't show up or if you get an error, most likely the files weren't placed correctly. Repeat 
+-If the room doesn't show up or if you get an error, most likely the files weren't placed correctly. Repeat 
    step 3, making sure to put the "game" and "lib" folders directly into the main "Doki Doki Literature Club" 
    folder.
    
@@ -40,7 +40,7 @@ I have other rooms available! They can be found here:
 
 ## Other info:
 
--At the moment, the custom rooms don't account for the Halloween or Christmas decor (birthday decor works fine, 
+-At the moment, the den doesn't account for the Halloween or Christmas decor (birthday decor works fine, 
    though), but we're planning on fixing this in an update before Halloween.
    
 -Luckily, the game will notify you when an update to the submod is available, thanks to submod plugin we 
