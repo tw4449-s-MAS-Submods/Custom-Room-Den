@@ -1,5 +1,5 @@
 # Custom-Room-Den
-This submod adds a cozy green-walled room where you can relax with Monika. Download 
+This submod adds a cozy green-walled room where you can relax with Monika. 
 #### Hi! First of all: thank you for wanting to use my work! It means a lot that I can do something to make people’s time with their Monika that much better.
 
 #### Anyhow, right to the instructions. 
