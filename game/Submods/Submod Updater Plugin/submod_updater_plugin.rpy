@@ -8,7 +8,7 @@ init -990 python:
             "A util submod that adds an in-game updater for other submods. "
             "Check {a=https://github.com/Booplicate/MAS-Submods-SubmodUpdaterPlugin}{i}{u}here{/u}{/i}{/a} if you want your submod to use this."
         ),
-        version="1.2",
+        version="1.4",
         settings_pane="sup_setting_pane"
     )
 
@@ -21,10 +21,14 @@ init -990 python:
         update_dir=""
     )
 
-# Add our certifs
-init -999 python:
-    import os
-    os.environ["SSL_CERT_FILE"] = renpy.config.gamedir + "/python-packages/certifi/cacert.pem"
+init -999:
+    # Add our certifs
+    python:
+        import os
+        os.environ["SSL_CERT_FILE"] = renpy.config.gamedir + "/python-packages/certifi/cacert.pem"
+
+    # Persistent var for our settings
+    default persistent._sup_settings = dict()
 
 # Main code
 init -991 python in sup_utils:
@@ -35,10 +39,7 @@ init -991 python in sup_utils:
     import time
     import urllib2
     import threading
-    from store import mas_submod_utils
-    from store import mas_utils
-    from store import ConditionSwitch
-    from store import AnimatedValue
+    from store import mas_submod_utils, mas_utils, ConditionSwitch, AnimatedValue, persistent
     from json import loads as loadJSON
     from zipfile import ZipFile
     from subprocess import Popen as subprocOpen
@@ -213,7 +214,8 @@ init -991 python in sup_utils:
             update_dir=None,
             extraction_depth=1,
             attachment_id=0,
-            tag_formatter=None
+            tag_formatter=None,
+            redirected_files=None
         ):
             """
             Constructor
@@ -238,13 +240,13 @@ init -991 python in sup_utils:
                     If False you'll need to implement another way to update (or don't if you only want to notify about updates)
                     (Default: True)
 
-                submod_dir - relative file path to the directory of the submod
-                    e.g. '/.../your submod folder'
+                submod_dir - relative file path to the directory of the submod (relative to config.gamedir)
+                    e.g. '/Submods/Your submod folder'
                     NOTE: if None, the updater will try to find the path itself
                     NOTE: if None when we're trying to update the submod and no update_dir specified, the update will be aborted
                     (Default: None)
 
-                update_dir - directory where updates will be installed to
+                update_dir - directory where updates will be installed in
                     NOTE: if None, updates will be installed in the submod directory if one was specified
                     NOTE: if empty string, updates will be installed right in the base directory (the folder with DDLC.exe)
                     (Default: None)
@@ -263,6 +265,13 @@ init -991 python in sup_utils:
                 tag_formatter = if not None, assuming it's a function that accepts version tag from github as a string, formats it in a way,
                     and returns a new formatted tag as a string. Exceptions are auto-handled. If None, no formatting applies on version tags
                     (Default: None)
+
+                redirected_files - a string or a list of strings with filenames that the updater will TRY to move to the submod dir during update.
+                    If the files don't exist or this's set to empty list/tuple, it will do nothing. If None this will be set to ("readme.md", "license.md", "changelog.md")
+                    NOTE: Case-insensitive
+                    NOTE: this's intended to work only on files, NOT folders
+                    NOTE: this requires submod_dir to have a non-None value during update
+                    (Default: None)
             """
             if isinstance(submod, basestring):
                 submod_name = submod
@@ -277,7 +286,6 @@ init -991 python in sup_utils:
                 raise SubmodUpdaterError(
                     "\"{0}\" is not a string, nor a Submod object.".format(submod)
                 )
-                return
 
             # ignore if the submod doesn't exist
             if submod_obj is None:
@@ -289,18 +297,45 @@ init -991 python in sup_utils:
                 SubmodUpdaterError("Submod '{0}' had already been registered in Submod Updater Plugin. Ignoring.".format(submod_name))
                 return
 
+            if submod_name not in persistent._sup_settings:
+                persistent._sup_settings[submod_name] = {
+                    "should_notify": should_notify,
+                    "auto_check": auto_check,
+                    "allow_updates": allow_updates
+                }
+
             self.id = submod_name
             self._submod = submod_obj
             self.__user_name = user_name
             self.__repository_name = repository_name
-            self.should_notify = should_notify
-            self.auto_check = auto_check
-            self.allow_updates = allow_updates
-            self._submod_dir = submod_dir or self.__getCurrentFilePath()
+
+            # Try to load settings from persistent
+            self.should_notify = persistent._sup_settings[self.id].get("should_notify", should_notify)
+            self.auto_check = persistent._sup_settings[self.id].get("auto_check", auto_check)
+            self.allow_updates = persistent._sup_settings[self.id].get("allow_updates", allow_updates)
+
+            self._submod_dir = submod_dir.replace("\\", "/") if submod_dir is not None else self.__getCurrentFilePath()
             self._update_dir = update_dir
             self._extraction_depth = extraction_depth
             self.__attachment_id = attachment_id
             self.__tag_formatter = tag_formatter
+
+            if redirected_files is None:
+                redirected_files = ("readme.md", "license.md", "changelog.md")
+
+            else:
+                if isinstance(redirected_files, basestring):
+                    redirected_files = [redirected_files]
+
+                elif isinstance(redirected_files, tuple):
+                    redirected_files = list(redirected_files)
+
+                for id, filename in enumerate(redirected_files):
+                    redirected_files[id] = filename.lower()
+
+                redirected_files = tuple(redirected_files)
+
+            self.__redirected_files = redirected_files
 
             self.__json_request = self.__buildJSONRequest()
             self._json = None
@@ -311,9 +346,6 @@ init -991 python in sup_utils:
             self.update_exception = None
 
             self.__updateCheckLock = threading.Lock()
-            # self.__updateAvailablePropLock = threading.Lock()
-            # self.__updatingPropLock = threading.Lock()
-            # self.__updatedPropLock = threading.Lock()
 
             self.registered_updaters[self.id] = self
 
@@ -380,18 +412,21 @@ init -991 python in sup_utils:
             Toggles the should_notify property
             """
             self.should_notify = not self.should_notify
+            persistent._sup_settings[self.id]["should_notify"] = self.should_notify
 
         def toggleAutoChecking(self):
             """
             Toggles the auto_check property
             """
             self.auto_check = not self.auto_check
+            persistent._sup_settings[self.id]["auto_check"] = self.auto_check
 
         def toggleUpdates(self):
             """
             Toggles the allow_updates property
             """
             self.allow_updates = not self.allow_updates
+            persistent._sup_settings[self.id]["allow_updates"] = self.allow_updates
 
         def isUpdating(self):
             """
@@ -756,17 +791,41 @@ init -991 python in sup_utils:
                 OUT:
                     list of exceptions (it can be empty)
                 """
-                # list of exceptions we get during this call
+                # List of exceptions we get during this call
                 exceptions = []
-                # set the next depth
+                # Set the next depth
                 new_depth = depth - 1
+                # Save it for future uses
+                og_dst = dst
 
                 if os.path.isdir(srs):
                     for item in os.listdir(srs):
+                        # Set the new source path
                         new_srs = os.path.join(srs, item).replace("\\", "/")
-                        new_dst = os.path.join(dst, item).replace("\\", "/")
+                        # Check if we want to redirect this file
+                        if (
+                            self.__redirected_files is not None
+                            and self._submod_dir is not None
+                            and os.path.isfile(new_srs)
+                            and "python-packages" not in new_srs
+                            and item.lower() in self.__redirected_files
+                        ):
+                            dst = os.path.join(
+                                self.GAME_DIRECTORY,
+                                self._submod_dir.lstrip("/")
+                            ).replace("\\", "/")
 
-                        # should we go deeper?
+                            new_dst = os.path.join(
+                                self.GAME_DIRECTORY,
+                                self._submod_dir.lstrip("/"),
+                                item
+                            ).replace("\\", "/")
+
+                        else:
+                            dst = og_dst
+                            new_dst = os.path.join(dst, item).replace("\\", "/")
+
+                        # Should we go deeper?
                         if (
                             depth > 0
                             and os.path.isdir(new_srs)
@@ -774,14 +833,14 @@ init -991 python in sup_utils:
                             rv = __extract_files(new_srs, dst, new_depth)
                             exceptions += rv
 
-                        # or just extract as is
+                        # Or just extract as is
                         else:
-                            # the dir already exists, have to use recursion
+                            # The dir already exists, have to use recursion
                             if os.path.isdir(new_dst):
                                 rv = __extract_files(new_srs, new_dst, 0)
                                 exceptions += rv
 
-                            # the file exists, have to delete it first
+                            # The file exists, have to delete it first
                             elif os.path.isfile(new_dst):
                                 try:
                                     os.remove(new_dst)
@@ -790,7 +849,7 @@ init -991 python in sup_utils:
                                 except Exception as e:
                                     exceptions.append(str(e))
 
-                            # simply move it
+                            # Simply move it
                             else:
                                 try:
                                     shutil.move(new_srs, dst)
@@ -817,7 +876,7 @@ init -991 python in sup_utils:
                 except Exception as e:
                     self.update_exception = SubmodUpdaterError("Failed to delete temp files: {0}".format(path), e)
 
-            def __do_progress_bar_logic():
+            def __do_bulk_progress_bar_logic():
                 """
                 Does logic for updating the progress bar for bulk downloads
                 """
@@ -846,7 +905,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -858,7 +917,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -876,17 +935,31 @@ init -991 python in sup_utils:
 
                             self.__updating = False
 
-                            __do_progress_bar_logic()
+                            __do_bulk_progress_bar_logic()
 
                             return False
 
                         update_dir = self._submod_dir
 
+                    update_dir = update_dir.replace("\\", "/")
+
                     # Make it an absolute path if needed
-                    if self.GAME_DIRECTORY not in update_dir:
+                    if (
+                        (
+                            update_dir.startswith("game/")
+                            or update_dir.startswith("/game/")
+                        )
+                        and self.BASE_DIRECTORY not in update_dir
+                    ):
+                        update_dir = os.path.join(
+                            self.BASE_DIRECTORY,
+                            update_dir.lstrip("/")# strip just in case, because join doesn't work if there's `/` at the beggining of the path
+                        ).replace("\\", "/")
+
+                    elif self.GAME_DIRECTORY not in update_dir:
                         update_dir = os.path.join(
                             self.GAME_DIRECTORY,
-                            update_dir.lstrip("/")# strip just in case, because join doesn't work if there's `/` at the beggining of the path
+                            update_dir.lstrip("/")# strip just in case
                         ).replace("\\", "/")
 
                 # if temp_folder_name is None:
@@ -917,7 +990,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -947,12 +1020,13 @@ init -991 python in sup_utils:
 
                         else:
                             request_attempts_left -= 1
+                            # Not sure why, but we do need to make a new request object
                             req_size_request = urllib2.Request(
                                 url=update_url,
                                 headers=req_size_headers
                             )
                             if request_attempts_left > 0:
-                                time.sleep(1)
+                                time.sleep(1.5)
 
                     # I give 10 attempts, if we fail, we fail. Blame GitHub.
                     if update_size is None:
@@ -962,7 +1036,7 @@ init -991 python in sup_utils:
 
                         self.__updating = False
 
-                        __do_progress_bar_logic()
+                        __do_bulk_progress_bar_logic()
 
                         return False
 
@@ -973,7 +1047,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -1029,7 +1103,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -1046,7 +1120,7 @@ init -991 python in sup_utils:
 
                     self.__updating = False
 
-                    __do_progress_bar_logic()
+                    __do_bulk_progress_bar_logic()
 
                     return False
 
@@ -1085,7 +1159,7 @@ init -991 python in sup_utils:
                 self.__updating = False
                 self.__updated = True
 
-                __do_progress_bar_logic()
+                __do_bulk_progress_bar_logic()
 
                 return True
 
@@ -1181,8 +1255,8 @@ init -991 python in sup_utils:
             # We should use the lock to modify the list
             with cls.updateDownloadLock:
                 # Reset after the previous update
-                cls.queued_updaters = []
-                cls.finished_updaters = []
+                cls.queued_updaters[:] = []
+                cls.finished_updaters[:] = []
                 cls.bulk_progress_bar.reset()
 
                 for updater in updaters:
@@ -1246,6 +1320,23 @@ init -991 python in sup_utils:
                 SubmodUpdater object, or None if not found.
             """
             return cls.registered_updaters.get(submod_name, None)
+
+        @classmethod
+        def getUpdaters(cls, exclude_sup=True):
+            """
+            Returns a list of all registered updaters
+
+            IN:
+                exclude_sup - whether or not we exclude Submod Updater Plugin's updater from the list
+
+            OUT:
+                list of updaters
+            """
+            rv = cls.registered_updaters.values()
+            if exclude_sup:
+                rv = filter(lambda updater: updater.id != "Submod Updater Plugin", rv)
+
+            return rv
 
         @classmethod
         def _getUpdaterForUpdatingSubmod(cls):
@@ -1583,23 +1674,29 @@ image sup_progress_bar_text:
 
 # # # Submod Updater Plugin settings screen
 screen sup_setting_pane():
+    default total_updaters = len(store.sup_utils.SubmodUpdater.getUpdaters())
     default updatable_submod_updaters = store.sup_utils.SubmodUpdater.getUpdatersForOutdatedSubmods(ignore_if_cant_update=True)
     default total_updatable_submod_updaters = len(updatable_submod_updaters)
 
-    if store.sup_utils.SubmodUpdater.hasOutdatedSubmods():
-        vbox:
-            # ypos 0
-            xmaximum 800
-            xfill True
-            style_prefix "check"
+    vbox:
+        xmaximum 800
+        xfill True
+        style_prefix "check"
 
-            textbutton "{b}Read more about new updates!{/b}":
+        if total_updaters > 0:
+            textbutton "{b}Adjust settings{/b}":
+                ypos 1
+                selected False
+                action Show("sup_settings")
+
+        if store.sup_utils.SubmodUpdater.hasOutdatedSubmods():
+            textbutton "{b}Select a submod to update{/b}":
                 ypos 1
                 selected False
                 action Show("sup_available_updates")
 
             if total_updatable_submod_updaters > 0:
-                textbutton "{b}Update all submods now!{/b}":
+                textbutton "{b}Update all submods that have available updates{/b}":
                     ypos 1
                     selected False
                     action Show(
@@ -1607,6 +1704,65 @@ screen sup_setting_pane():
                         submod_updaters=updatable_submod_updaters,
                         from_submod_screen=True
                     )
+
+# # # A screen to change updaters' settings
+screen sup_settings():
+    key "noshift_T" action NullAction()
+    key "noshift_t" action NullAction()
+    key "noshift_M" action NullAction()
+    key "noshift_m" action NullAction()
+    key "noshift_P" action NullAction()
+    key "noshift_p" action NullAction()
+    key "noshift_E" action NullAction()
+    key "noshift_e" action NullAction()
+
+    default submod_updaters = sorted(store.sup_utils.SubmodUpdater.getUpdaters(), key=lambda updater: updater.id)
+
+    modal True
+
+    zorder 200
+
+    style_prefix "confirm"
+    add mas_getTimeFile("gui/overlay/confirm.png")
+
+    frame:
+        vbox:
+            ymaximum 300
+            xmaximum 800
+            xfill True
+            yfill False
+            spacing 5
+
+            viewport:
+                id "viewport"
+                scrollbars "vertical"
+                ymaximum 250
+                xmaximum 780
+                xfill True
+                yfill False
+                mousewheel True
+
+                vbox:
+                    xmaximum 780
+                    xfill True
+                    yfill False
+                    box_wrap False
+
+                    for submod_updater in submod_updaters:
+                        text "[submod_updater.id] v[submod_updater._submod.version]"
+
+                        hbox:
+                            xpos 5
+                            spacing 10
+                            xmaximum 780
+
+                            textbutton ("Disable notifications" if submod_updater.should_notify else "Enable notifications"):
+                                style "check_button"
+                                ypos 1
+                                action Function(submod_updater.toggleNotifs)
+
+            textbutton "Close":
+                action Hide("sup_settings")
 
 # # # Screen that show all available updates
 screen sup_available_updates():
@@ -1654,45 +1810,44 @@ screen sup_available_updates():
                     box_wrap False
 
                     for submod_updater in submod_updaters:
-                        if submod_updater.should_notify:
-                            hbox:
-                                xpos 20
-                                spacing 10
-                                xmaximum 780
+                        hbox:
+                            xpos 20
+                            spacing 10
+                            xmaximum 780
 
-                                text "[submod_updater.id]"
-                                text "v[submod_updater._submod.version]"
-                                text " >>> "
-                                text "v[submod_updater.latest_version]"
+                            text "[submod_updater.id]"
+                            text "v[submod_updater._submod.version]"
+                            text " >>> "
+                            text "v[submod_updater.latest_version]"
 
-                            hbox:
-                                xpos 5
-                                spacing 10
-                                xmaximum 780
+                        hbox:
+                            xpos 5
+                            spacing 10
+                            xmaximum 780
 
-                                textbutton "What's new?":
+                            textbutton "What's new?":
+                                style "check_button"
+                                ypos 1
+                                action [
+                                    Show(
+                                        "sup_update_preview",
+                                        title=submod_updater.update_name,
+                                        body=submod_updater.update_changelog
+                                    ),
+                                    Hide("sup_available_updates")
+                                ]
+
+                            if (
+                                submod_updater.allow_updates
+                                and not submod_updater.isUpdating()
+                            ):
+                                textbutton "Update now!":
                                     style "check_button"
                                     ypos 1
                                     action [
-                                        Show(
-                                            "sup_update_preview",
-                                            title=submod_updater.update_name,
-                                            body=submod_updater.update_changelog
-                                        ),
+                                        Show("sup_confirm_single_update", submod_updater=submod_updater),
                                         Hide("sup_available_updates")
                                     ]
-
-                                if (
-                                    submod_updater.allow_updates
-                                    and not submod_updater.isUpdating()
-                                ):
-                                    textbutton "Update now!":
-                                        style "check_button"
-                                        ypos 1
-                                        action [
-                                            Show("sup_confirm_single_update", submod_updater=submod_updater),
-                                            Hide("sup_available_updates")
-                                        ]
 
             hbox:
                 xalign 0.5
