@@ -1,3 +1,4 @@
+![Den](https://preview.redd.it/xkdinpm2aqm51.png?width=1920&format=png&auto=webp&s=de1dac6563e69fc0081b03f63304df4865c4bafe)
 # Custom-Room-Den
 This submod adds a cozy green-walled den where you can relax with Monika.
 
