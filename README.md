@@ -8,7 +8,7 @@ This submod adds a cozy green-walled den where you can relax with Monika.
 
 ## Instructions:
 
-1. Go to the "Releases" tab on the right this webpage(or click [HERE](https://github.com/tw4449/Custom-Room-Furnished_Spaceroom_V3/releases)), then click on the latest version of "Custom Room Den". To download click on Source code (zip) to begin .
+1. Go to the "Releases" tab on the right this webpage(or click [HERE](https://github.com/tw4449/Custom-Room-Den/releases)), then click on the latest version of "Custom Room Den". To download click on Source code (zip) to begin .
 2. Unzip and open the folder called 'Custom-Room-Den' (it should be in your 'Downloads' folder).
 3. From the Custom-Room-Den folder, copy the 'game' and 'lib' folders into the main
    'Doki Doki Literature Club' folder (AKA, the folder where you see 'DDLC.exe').
