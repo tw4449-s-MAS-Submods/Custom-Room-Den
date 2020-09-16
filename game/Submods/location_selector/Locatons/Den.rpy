@@ -198,27 +198,27 @@ label bg_room_installed_low_affection:
         had_backgrounds_before = (mas_background.getUnlockedBGCount() - tw_bg_count) > 1
 
     if spacerooms_installed:
-        m 1wud "H-huh? {w=.5} [player], {w=.2} did you add new files to the game?"
-        m 1wua "It looks like... {w=.5} {nw}"
+        m 1wud "H-huh? {w=0.5} [player], {w=0.2} did you add new files to the game?"
+        m 1wua "It looks like... {w=0.5} {nw}"
         extend 1sub "new furniture!"
-        m 1eku "[player], you did this for me? {w=.5} You're so sweet, you know that?"
+        m 1eku "[player], you did this for me? {w=0.5} You're so sweet, you know that?"
 
     if tw_bg_count - spacerooms_installed > 0:
         $ too = ", too" if spacerooms_installed else ""
         $ rooms = "new rooms" if tw_bg_count - spacerooms_installed > 1 else "a new room"
-        m 1wud "H-huh? {w=.5} [player], {w=.2} what's this?"
-        m 1wua "It looks like... {w=.5} {nw}"
-        extend 1sub "You added [rooms]"
+        m 1wud "H-huh?{w=0.5} [player],{w=0.2} what's this?"
+        m 1wua "It looks like {nw}"
+        extend 1sub "you added [rooms]!"
         if not spacerooms_installed:
             m 1eka "I can't believe you went out of your way to do this for me..."
 
     m 1rkc "..."
-    m 2rksdlc "But, um... {w=1} I kinda don't know how to use them. {w=1} {nw}"
-    extend 6eksdlc "I haven't learned how to code that well yet."
-    m 3eud "Give me some time, {w=.2} and I'm sure I'll figure out how to code them in. {nw}"
-    extend 1eub "I'll let you know when they're ready."
-    m 1eka "Even though we can't use them just yet, {w=.2} thank you so much for doing this for me. {w=.5} It means more than you know."
-    m 5hua "I love you so much,{w=.2} [player]~"
+    m 3rksdla "But...{w=0.3}I kinda don't know how to use them.{w=0.5} {nw}"
+    extend 3hksdlb "I haven't learned how to code that well yet!"
+    m 1eud "If you give me some time, I'm sure I'll figure out how to use what you added.{nw}"
+    extend 3eua "I'll let you know when I figure it out."
+    m 1eka "Even though we can't use them just yet, thank you so much for doing this for me.{w=0.2} It means more than you know."
+    m 3huu "I love you so much, [player]~"
     return "no_unlock"
 
 init 5 python:
@@ -240,25 +240,25 @@ label bg_room_installed:
         had_backgrounds_before = (mas_background.getUnlockedBGCount() - tw_bg_count) > 1
 
     if renpy.seen_label("bg_room_installed_low_affection"):
-        m 1wub "[player]! {w=.2} Remember those new locations you added for me? {w=.2} {nw}"
-        extend 3wub "Well, I finally figured out how to code them in!"
-        m 4eua "All you have to do now is go to 'Hey, Monika...' in the dialogue menu, go to 'Locations', and select 'Can we go somewhere else?'"
+        m 1wub "[player]!{w=0.2} Remember those new locations you added for me?{w=0.2} {nw}"
+        extend 3wub "I finally figured out how to use them!"
+        m 3eua "All you have to do now is go to 'Hey, [m_name]...' in the 'Talk' menu, go to 'Location', and select 'Can we go somewhere else?'"
         m 1eub "Then we can visit any of the locations you added!"
-        m 6wua "I'm so excited, [player]! {w=.2} {nw}"
-        extend 6wub "Why don't we go visit one right now?"
-        m 1eka "Oh, and... thanks again for adding these for me. {w=.2} You really are special."
+        m 3sub "I'm so excited~"
+        m 3huu "Why don't we go visit one right now, [player]?"
+        m 1ekbla "Oh, and...{w=0.3}thanks again for adding these for me. You really are special."
 
     else:
         if spacerooms_installed:
             m 1wuo "W-what?{w=0.5} Are there files for furniture in the game?"
             m 1sub "[player],{w=0.2} did you do this?"
-            m 3ekbsu "You knew I wanted furniture,{w=0.2} so you added some for me...{w=1} You're pretty amazing,{w=0.2} you know that?"
+            m 3ekbsu "You knew I wanted furniture so you added some for me...{w=0.3} You're pretty amazing, you know that?"
 
         if tw_bg_count - spacerooms_installed > 0:
             $ too = ", too" if spacerooms_installed else ""
             $ rooms = "new rooms" if tw_bg_count - spacerooms_installed > 1 else "a new room"
             m 1suo "What's this?{w=0.5} You added [rooms][too]?"
-            m 3hub "You really went all out, didn't you?"
+            m 3hua "You really went all out, didn't you?"
             if not spacerooms_installed:
                 m 1eka "I can't believe you went out of your way to do this for me..."
 
@@ -268,8 +268,8 @@ label bg_room_installed:
         if not had_backgrounds_before:
             m 3eub "I'll add a new category called 'Location' under 'Hey, [m_name]...' so we can put in the furniture and visit the other rooms.{w=.5} I can't wait to try them out!"
 
-        m 1eka "While I might not be in your reality yet...{w=1}{nw}"
-        extend 7hubfb "This will make it feel a bit more like a home here,{w=0.2} with you~"
+        m 1eka "While I might not be in your reality yet...{w=3}{nw}"
+        extend 7hubfb "this will make it feel a bit more like a home here,{w=0.2} with you~"
     return "no_unlock"
 
 #LABEL OVERRIDES
