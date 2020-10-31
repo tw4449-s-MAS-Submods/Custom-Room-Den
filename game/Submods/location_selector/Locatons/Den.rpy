@@ -4,7 +4,7 @@ init -990 python:
         author="tw4449 Cdino112 multimokia d3adpan Booplicate",
         name="Custom Room Den",
         description="This submod adds a cozy green-walled room where you can relax with Monika.",
-        version="1.0.2"
+        version="1.0.3"
     )
 
 # Register the updater
