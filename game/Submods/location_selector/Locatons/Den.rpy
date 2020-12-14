@@ -408,3 +408,22 @@ label o31_room_explanation:
     m 1eka "Thanks for understanding, [mas_get_player_nickname()]~"
 
     return
+
+init 5 python:
+    addEvent(
+        Event(
+            persistent.event_database,
+            eventlabel="D25_Deco",
+            conditional="True",
+            action=EV_ACT_QUEUE,
+            aff_range=(mas_aff.ENAMORED, None)
+        )
+    )
+
+label D25_Deco:
+    m 1wuo "Wait...{w=0.5} [player], did you add decorations to the other rooms?"
+    m 3hub "Yay! I can't wait to see how they look!~"
+    m 1ekbsa "Thanks, [mas_get_player_nickname()], you really do spoil me."
+    m 1hubsu "I love you so much."
+
+    return
