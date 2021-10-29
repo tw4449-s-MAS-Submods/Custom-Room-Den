@@ -4,7 +4,7 @@ init -990 python:
         author="tw4449 Cdino112 multimokia d3adpan Booplicate",
         name="Custom Room Den",
         description="This submod adds a cozy green-walled room where you can relax with Monika.",
-        version="1.0.5"
+        version="1.0.6"
     )
 
 # Register the updater
@@ -36,6 +36,32 @@ image submod_background_Den_ss = "mod_assets/location/Den V1.1/den1.1-ss.png"
 image submod_background_Den_rain_ss = "mod_assets/location/Den V1.1/den1.1_rain-ss.png"
 image submod_background_Den_overcast_ss = "mod_assets/location/Den V1.1/den1.1_overcast-ss.png"
 image submod_background_Den_snow_ss = "mod_assets/location/Den V1.1/den1.1_snow-ss.png"
+
+##DECO
+image den_o31_deco = ConditionSwitch(
+    "mas_current_background.isFltDay()", "mod_assets/location/Den V1.1/deco/o31/deco.png",
+    "True", "mod_assets/location/Den V1.1/deco/o31/deco-n.png"
+)
+
+image den_d25_deco = ConditionSwitch(
+    "mas_current_background.isFltDay()", "mod_assets/location/Den V1.1/deco/d25/deco.png",
+    "True", "mod_assets/location/Den V1.1/deco/d25/deco-n.png"
+)
+
+init 501 python:
+    MASImageTagDecoDefinition.register_img(
+        "mas_o31_wall_bats",
+        submod_background_Den.background_id,
+        MASAdvancedDecoFrame(zorder=5),
+        replace_tag="den_o31_deco"
+    )
+
+    MASImageTagDecoDefinition.register_img(
+        "mas_d25_tree",
+        submod_background_Den.background_id,
+        MASAdvancedDecoFrame(zorder=5),
+        replace_tag="den_d25_deco"
+    )
 
 
 init -1 python:
@@ -127,9 +153,6 @@ init -2 python in mas_background:
             if not store.mas_inEVL("Den_switch_dlg"):
                 store.pushEvent("Den_switch_dlg")
 
-            store.mas_o31HideVisuals()
-            store.mas_d25HideVisuals()
-
         store.monika_chr.tablechair.table = "DE"
         store.monika_chr.tablechair.chair = "DE"
 
@@ -137,14 +160,6 @@ init -2 python in mas_background:
         """
         Exit programming point for Den background
         """
-        #O31
-        if store.persistent._mas_o31_in_o31_mode:
-            store.mas_o31ShowVisuals()
-
-        #D25
-        elif store.persistent._mas_d25_deco_active:
-            store.mas_d25ShowVisuals()
-
         #Lock islands greet to be sure
         store.mas_lockEVL("mas_monika_islands", "EVE")
 
@@ -314,7 +329,7 @@ label monika_players_control_override:
 
     $ persistent._seen_ever["monika_players_control"] = True
     return
-    
+
 
 init 1 python:
     config.label_overrides["monika_gotomonika"] = "monika_gotomonika_override"
