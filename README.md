@@ -8,7 +8,7 @@ This submod adds a cozy green-walled den where you can relax with Monika.
 
 ## Instructions:
 
-1. Go to the "Releases" tab on the right this webpage(or click [HERE](https://github.com/tw4449/Custom-Room-Den/releases)), then click on the latest version of "Custom Room Den". To download click on Source code (zip) to begin.
+1. Go to the "Releases" tab on the right this webpage(or click [HERE](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Den/releases)), then click on the latest version of "Custom Room Den". To download click on Source code (zip) to begin.
 
 2. Unzip and open the folder called 'Custom-Room-Den' (it should be in your 'Downloads' folder).
 
@@ -24,13 +24,15 @@ And that's it! It's that simple.
 
 I have other rooms available! They can be found here:
 
--[Spaceroom v1](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V1)
+-[Spaceroom v1](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Furnished-Spaceroom-V1)
 
--[Spaceroom v2](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V2)
+-[Spaceroom v2](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Furnished-Spaceroom-V2)
 
--[Spaceroom v3](https://github.com/tw4449/Custom-Room-Furnished-Spaceroom-V3)
+-[Spaceroom v3](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Furnished-Spaceroom-V3)
 
--[Kitchen](https://github.com/tw4449/Custom-Room-Kitchen)
+-[Kitchen](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Kitchen)
+
+-[Garden-View](https://github.com/tw4449-s-MAS-Submods/Custom-Room-Garden-View)
 
 ## Troubleshooting:
 
@@ -48,10 +50,7 @@ I have other rooms available! They can be found here:
 
 ## Other info:
 
--At the moment, the den doesn't account for the Halloween or Christmas decor (birthday decor works fine,
-   though), but we're planning on fixing this in an update before Halloween.
-
--Luckily, the game will notify you when an update to the submod is available, thanks to submod plugin we
+-The game will notify you when an update to the submod is available, thanks to submod plugin we
    incorporated courtesy of Booplicate (more info below). This plugin both notifies you of updates, and helps
    you download and install them.
 
@@ -72,4 +71,4 @@ Additionally, many kudos and thanks to [Booplicate](https://github.com/Booplicat
 
 #### ~ tw4449
 
-[BACK TO Custom-Room-Selection-Pack-Main-Repository](https://github.com/tw4449/tw4449-Custom-Room-Selection-Pack-Main-Repository)
+[BACK TO Custom-Room-Selection-Pack](https://github.com/tw4449-s-MAS-Submods/tw4449-Custom-Room-Selection-Pack-Main-Repository)
