@@ -407,23 +407,6 @@ label monika_gotomonika_override:
 init 0 python:
     store.mas_utils.trydel(renpy.config.basedir.replace('\\', '/') + "/readme.md")
 
-init 1 python:
-    store.mas_submod_utils.registerFunction(
-        "greeting_o31_cleanup",
-        pushEvent,
-        args=["o31_room_explanation"]
-    )
-
-label o31_room_explanation:
-    m 1eud "Oh, by the way, [player]...{w=0.3}{nw}"
-    extend 3euc "you probably noticed we're back in the empty classroom."
-    m 1rksdlc "I didn't really have time to decorate any rooms other than this one..."
-    m 1eua "So if you don't mind, I'd like to stay here so we can enjoy the decorations together."
-    m 3eka "We can go back to the other rooms tomorrow, alright?"
-    m 1eka "Thanks for understanding, [mas_get_player_nickname()]~"
-
-    return
-
 init 5 python:
     addEvent(
         Event(
