@@ -4,7 +4,7 @@ init -990 python:
         author="tw4449 Cdino112 multimokia d3adpan Booplicate",
         name="Custom Room Den",
         description="This submod adds a cozy green-walled room where you can relax with Monika.",
-        version="1.0.6"
+        version="1.0.7"
     )
 
 # Register the updater
@@ -62,7 +62,6 @@ init 501 python:
         MASAdvancedDecoFrame(zorder=5),
         replace_tag="den_d25_deco"
     )
-
 
 init -1 python:
     submod_background_Den = MASFilterableBackground(
@@ -406,22 +405,3 @@ label monika_gotomonika_override:
 ## remove the readme
 init 0 python:
     store.mas_utils.trydel(renpy.config.basedir.replace('\\', '/') + "/readme.md")
-
-init 5 python:
-    addEvent(
-        Event(
-            persistent.event_database,
-            eventlabel="D25_Deco",
-            conditional="True",
-            action=EV_ACT_QUEUE,
-            aff_range=(mas_aff.ENAMORED, None)
-        )
-    )
-
-label D25_Deco:
-    m 1wuo "Wait...{w=0.5} [player], did you add decorations to the other rooms?"
-    m 3hub "Yay! I can't wait to see how they look!~"
-    m 1ekbsa "Thanks, [mas_get_player_nickname()], you really do spoil me."
-    m 1hubsu "I love you so much."
-
-    return
