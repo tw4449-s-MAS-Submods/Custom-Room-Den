@@ -4,7 +4,7 @@ init -990 python:
         author="tw4449 Cdino112 multimokia d3adpan Booplicate",
         name="Custom Room Den",
         description="This submod adds a cozy green-walled room where you can relax with Monika.",
-        version="1.0.7"
+        version="1.0.8"
     )
 
 # Register the updater
@@ -43,10 +43,78 @@ image den_o31_deco = ConditionSwitch(
     "True", "mod_assets/location/Den V1.1/deco/o31/deco-n.png"
 )
 
-image den_d25_deco = ConditionSwitch(
+image DEN__d25_deco = ConditionSwitch(
     "mas_current_background.isFltDay()", "mod_assets/location/Den V1.1/deco/d25/deco.png",
     "True", "mod_assets/location/Den V1.1/deco/d25/deco-n.png"
 )
+
+
+    #0 gifts is blank
+#1-3 gifts gets you part 1
+#4 gifts gets you part 2
+#5+ gifts get you part 3
+image DEN_mas_d25_gifts = ConditionSwitch(
+    "len(persistent._mas_d25_gifts_given) == 0", "mod_assets/location/Den V1.1/deco/d25/DEN_gifts_0.png",
+    "0 < len(persistent._mas_d25_gifts_given) < 3", "DEN_mas_d25_gifts_1",
+    "3 <= len(persistent._mas_d25_gifts_given) <= 4", "DEN_mas_d25_gifts_2",
+    "True", "DEN_mas_d25_gifts_3"
+)
+
+image DEN_mas_d25_gifts_1 = MASFilterSwitch(
+    "mod_assets/location/Den V1.1/deco/d25/DEN_gifts_1.png"
+)
+
+image DEN_mas_d25_gifts_2 = MASFilterSwitch(
+    "mod_assets/location/Den V1.1/deco/d25/DEN_gifts_2.png"
+)
+
+image DEN_mas_d25_gifts_3 = MASFilterSwitch(
+    "mod_assets/location/Den V1.1/deco/d25/DEN_gifts_3.png"
+)
+
+
+
+
+#image DEN_mas_d25_tree = ConditionSwitch(
+#    "mas_isNightNow()", ConditionSwitch(
+#        "persistent._mas_disable_animations", "mod_assets/location/Den V1.1/deco/d25/DEN_tree_lights_on_1.png",
+#        "not persistent._mas_disable_animations", "DEN_mas_d25_night_tree_lights_atl"
+#    ),
+#    "True", MASFilterSwitch(
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_tree_lights_off.png"
+#    )
+#)
+
+#image DEN_mas_d25_night_tree_lights_atl:
+#    block:
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_tree_lights_on_1.png"
+#        1.5
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_tree_lights_on_2.png"
+#        1.5
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_tree_lights_on_3.png"
+#        1.5
+#    repeat
+
+
+
+
+#image DEN_mas_d25_lights = ConditionSwitch(
+#    "mas_isNightNow()", ConditionSwitch(
+#        "persistent._mas_disable_animations", "mod_assets/Den V1.1/deco/d25/DEN_lights_on_1.png",
+#        "not persistent._mas_disable_animations", "DEN_mas_d25_night_lights_atl"
+#    ),
+#    "True", MASFilterSwitch("mod_assets/location/Den V1.1/deco/d25/DEN_lights_off.png")
+#)
+
+#image DEN_mas_d25_night_lights_atl:
+#    block:
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_lights_on_1.png"
+#        0.5
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_lights_on_2.png"
+#        0.5
+#        "mod_assets/location/Den V1.1/deco/d25/DEN_lights_on_3.png"
+#        0.5
+#    repeat
 
 init 501 python:
     MASImageTagDecoDefinition.register_img(
@@ -56,12 +124,34 @@ init 501 python:
         replace_tag="den_o31_deco"
     )
 
+#    MASImageTagDecoDefinition.register_img(
+#        "mas_d25_tree",
+#        submod_background_Den.background_id,
+#        MASAdvancedDecoFrame(zorder=5),
+#        replace_tag="DEN_mas_d25_tree"
+#    )
+
     MASImageTagDecoDefinition.register_img(
-        "mas_d25_tree",
+        "mas_d25_gifts",
         submod_background_Den.background_id,
-        MASAdvancedDecoFrame(zorder=5),
-        replace_tag="den_d25_deco"
+        MASAdvancedDecoFrame(zorder=6),
+        replace_tag="DEN_mas_d25_gifts"
     )
+
+#    MASImageTagDecoDefinition.register_img(
+#        "mas_d25_lights",
+#        submod_background_Den.background_id,
+#        MASAdvancedDecoFrame(zorder=5),
+#        replace_tag="DEN_mas_d25_lights"
+#    )
+
+    MASImageTagDecoDefinition.register_img(
+        "mas_d25_garlands",
+        submod_background_Den.background_id,
+        MASAdvancedDecoFrame(zorder=4),
+        replace_tag="DEN__d25_deco"
+    )
+
 
 init -1 python:
     submod_background_Den = MASFilterableBackground(
