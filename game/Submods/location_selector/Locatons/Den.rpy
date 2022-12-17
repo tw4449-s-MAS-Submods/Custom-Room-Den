@@ -100,7 +100,7 @@ image DEN_mas_d25_gifts_3 = MASFilterSwitch(
 
 #image DEN_mas_d25_lights = ConditionSwitch(
 #    "mas_isNightNow()", ConditionSwitch(
-#        "persistent._mas_disable_animations", "mod_assets/Den V1.1/deco/d25/DEN_lights_on_1.png",
+#        "persistent._mas_disable_animations", "mod_assets/location/Den V1.1/deco/d25/DEN_lights_on_1.png",
 #        "not persistent._mas_disable_animations", "DEN_mas_d25_night_lights_atl"
 #    ),
 #    "True", MASFilterSwitch("mod_assets/location/Den V1.1/deco/d25/DEN_lights_off.png")
