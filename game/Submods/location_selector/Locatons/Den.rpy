@@ -4,7 +4,7 @@ init -990 python:
         author="tw4449 Cdino112 multimokia d3adpan Booplicate",
         name="Custom Room Den",
         description="This submod adds a cozy green-walled room where you can relax with Monika.",
-        version="1.0.8"
+        version="1.0.8.1"
     )
 
 # Register the updater
@@ -12,10 +12,10 @@ init -989 python:
     if store.mas_submod_utils.isSubmodInstalled("Submod Updater Plugin"):
         store.sup_utils.SubmodUpdater(
             submod="Custom Room Den",
-            user_name="tw4449",
+            user_name="tw4449-s-MAS-Submods",
             repository_name="Custom-Room-Den",
             update_dir="",
-            attachment_id=None
+            attachment_id=0
         )
 
 ###START: IMAGE DEFINITIONS
